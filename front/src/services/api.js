@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/voicemails";
+const API_URL = "https://voicemail-aps.onrender.com/api/voicemails";
 
 export async function listarVoicemails() {
     const res = await fetch(API_URL);
