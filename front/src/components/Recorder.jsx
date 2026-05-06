@@ -37,7 +37,7 @@ export default function Recorder(props) {
                 const url = data.secure_url;
 
                 // 🔥 salva no backend
-                await fetch("http://localhost:8080/api/voicemails", {
+                await fetch("https://voicemail-aps.onrender.com/api/voicemails", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
