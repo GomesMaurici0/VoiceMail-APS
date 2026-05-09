@@ -1,14 +1,61 @@
 import { useState, useRef } from "react";
 
-export default function Recorder(props) {
+export default function Recorder({ onUpload }) {
     const [recording, setRecording] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [transcricao, setTranscricao] = useState("");
 
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
+    const recognitionRef = useRef(null);
+    const finalTextRef = useRef("");
+    const latestTextRef = useRef("");
 
     async function startRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        chunksRef.current = [];
+        finalTextRef.current = "";
+        latestTextRef.current = "";
+        setAudioUrl(null);
+        setTranscricao("");
+
+        const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = "pt-BR";
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                let textoFinal = "";
+                let textoParcial = "";
+
+                for (let i = 0; i < event.results.length; i++) {
+                    const texto = event.results[i][0].transcript;
+
+                    if (event.results[i].isFinal) {
+                        textoFinal += texto + " ";
+                    } else {
+                        textoParcial += texto + " ";
+                    }
+                }
+
+                const textoCompleto = `${textoFinal} ${textoParcial}`.trim();
+
+                finalTextRef.current = textoFinal.trim();
+                latestTextRef.current = textoCompleto;
+                setTranscricao(textoCompleto);
+            };
+
+            recognition.start();
+            recognitionRef.current = recognition;
+        } else {
+            setTranscricao("Seu navegador não suporta transcrição automática.");
+        }
 
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
@@ -18,7 +65,12 @@ export default function Recorder(props) {
         };
 
         mediaRecorder.onstop = async () => {
+            recognitionRef.current?.stop();
+            setUploading(true);
+
             const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+            const localUrl = URL.createObjectURL(blob);
+            setAudioUrl(localUrl);
 
             const formData = new FormData();
             formData.append("file", blob);
@@ -34,31 +86,24 @@ export default function Recorder(props) {
                 );
 
                 const data = await response.json();
-                const url = data.secure_url;
 
-                // 🔥 salva no backend
-                await fetch("https://voicemail-aps.onrender.com/api/voicemails", {
+                await fetch("http://localhost:8080/api/voicemails", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        audioUrl: url,
+                        audioUrl: data.secure_url,
+                        transcricao: latestTextRef.current || finalTextRef.current || "",
                     }),
                 });
 
-                console.log("URL Cloudinary:", url);
-
-                setAudioUrl(url);
-
-                // ✅ AQUI
-                props.onUpload && props.onUpload();
-
+                onUpload?.();
             } catch (error) {
                 console.error("Erro no upload:", error);
+            } finally {
+                setUploading(false);
             }
-
-            chunksRef.current = [];
         };
 
         mediaRecorder.start();
@@ -66,24 +111,40 @@ export default function Recorder(props) {
     }
 
     function stopRecording() {
-        mediaRecorderRef.current.stop();
+        mediaRecorderRef.current?.stop();
+        recognitionRef.current?.stop();
         setRecording(false);
     }
 
     return (
-        <div>
-            <h2>Gravador</h2>
+        <div className="recorder-card">
+            <strong>Novo correio de voz</strong>
+            <span>Grave uma nova mensagem</span>
 
             {!recording ? (
-                <button onClick={startRecording}>🎤 Gravar</button>
+                <button onClick={startRecording} disabled={uploading}>
+                    🎤 Gravar áudio
+                </button>
             ) : (
-                <button onClick={stopRecording}>⏹ Parar</button>
+                <button className="danger" onClick={stopRecording}>
+                    ⏹ Parar gravação
+                </button>
+            )}
+
+            {uploading && <p>Salvando áudio...</p>}
+
+            {recording && transcricao && (
+                <div className="record-preview">
+                    <strong>Transcrição ao vivo</strong>
+                    <p>{transcricao}</p>
+                </div>
             )}
 
             {audioUrl && (
-                <div>
-                    <h3>Prévia:</h3>
-                    <audio controls src={audioUrl}></audio>
+                <div className="record-preview">
+                    <strong>Último áudio gravado</strong>
+                    <audio className="mini-audio" controls src={audioUrl}></audio>
+                    <p>{transcricao || "Nenhuma transcrição capturada."}</p>
                 </div>
             )}
         </div>
