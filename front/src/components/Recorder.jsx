@@ -87,7 +87,7 @@ export default function Recorder({ onUpload }) {
 
                 const data = await response.json();
 
-                await fetch("http://localhost:8080/api/voicemails", {
+                await fetch("https://voicemail-aps.onrender.com/api/voicemails", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
