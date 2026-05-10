@@ -1,4 +1,17 @@
-const API_URL = "https://voicemail-aps.onrender.com/api/voicemails";
+const getAPIURL = () => {
+  const isDevelopment = import.meta.env.MODE === 'development';
+
+  if (isDevelopment) {
+    const host = window.location.hostname;
+    const port = 8080;
+    return `http://${host}:${port}/api/voicemails`;
+  }
+
+  return "https://voicemail-aps.onrender.com/api/voicemails";
+};
+
+const API_URL = getAPIURL();
+
 
 export async function listarVoicemails() {
     const res = await fetch(API_URL);

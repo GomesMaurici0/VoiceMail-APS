@@ -25,6 +25,9 @@ public class VoiceMail {
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
 
+    @Column(name = "transcricao")
+    private String transcricao;
+
     @PrePersist
     public void prePersist() {
         this.dataCriacao = LocalDateTime.now();

@@ -174,6 +174,11 @@ export default function Inbox({ reload }) {
                         </button>
                     ))}
                 </div>
+
+                {/* Recorder mobile - aparece apenas no mobile */}
+                <div className="mobile-recorder">
+                    <Recorder onUpload={carregar} />
+                </div>
             </section>
 
             {selected && !painelMinimizado && (
