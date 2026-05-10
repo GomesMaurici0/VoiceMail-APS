@@ -1,23 +1,12 @@
-const getAPIURL = () => {
-  // Usa a variável de ambiente VITE_API_URL se disponível
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-
-  // Fallback para produção
-  return "https://voicemail-aps.onrender.com/api/voicemails";
-};
-
-const API_URL = getAPIURL();
-
+const urlApi = "https://voicemail-aps.onrender.com/api/voicemails"
 
 export async function listarVoicemails() {
-    const res = await fetch(API_URL);
+    const res = await fetch(urlApi);
     return res.json();
 }
 
 export async function criarVoicemail(data) {
-    await fetch(API_URL, {
+    await fetch(urlApi, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -27,13 +16,13 @@ export async function criarVoicemail(data) {
 }
 
 export async function marcarComoOuvido(id) {
-    await fetch(`${API_URL}/${id}/ouvido`, {
+    await fetch(`${urlApi}/${id}/ouvido`, {
         method: "PATCH",
     });
 }
 
 export async function deletarVoicemail(id) {
-    await fetch(`${API_URL}/${id}`, {
+    await fetch(`${urlApi}/${id}`, {
         method: "DELETE",
     });
 }

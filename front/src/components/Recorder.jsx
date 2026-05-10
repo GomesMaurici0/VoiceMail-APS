@@ -111,7 +111,7 @@ export default function Recorder({ onUpload }) {
 
                     const data = await response.json();
 
-                    const apiUrl = `${window.location.protocol}//${window.location.hostname}:8080/api/voicemails`;
+                    const apiUrl = "https://voicemail-aps.onrender.com/api/voicemails";
                     const saveResponse = await fetch(apiUrl, {
                         method: "POST",
                         headers: {
