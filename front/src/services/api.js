@@ -1,12 +1,10 @@
 const getAPIURL = () => {
-  const isDevelopment = import.meta.env.MODE === 'development';
-
-  if (isDevelopment) {
-    const host = window.location.hostname;
-    const port = 8080;
-    return `http://${host}:${port}/api/voicemails`;
+  // Usa a variável de ambiente VITE_API_URL se disponível
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
   }
 
+  // Fallback para produção
   return "https://voicemail-aps.onrender.com/api/voicemails";
 };
 
