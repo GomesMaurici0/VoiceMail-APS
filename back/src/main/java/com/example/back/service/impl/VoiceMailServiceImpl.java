@@ -6,6 +6,7 @@ import com.example.back.mapper.VoiceMailMapper;
 import com.example.back.persistence.entity.VoiceMail;
 import com.example.back.persistence.repository.VoiceMailRepository;
 import com.example.back.service.VoiceMailService;
+import com.example.back.service.WebSocketNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +22,8 @@ import java.util.List;
 public class VoiceMailServiceImpl implements VoiceMailService {
 
     private final VoiceMailRepository repository;
-
     private final VoiceMailMapper mapper;
+    private final WebSocketNotificationService notificationService;
 
     private static final String DIRETORIO_UPLOAD = "uploads/audio/";
 
@@ -32,8 +33,12 @@ public class VoiceMailServiceImpl implements VoiceMailService {
         VoiceMail entity = mapper.toEntity(dto);
 
         VoiceMail salvo = repository.save(entity);
+        VoiceMailResponse response = mapper.toResponse(salvo);
 
-        return mapper.toResponse(salvo);
+        // Notifica todos os clientes sobre o novo voicemail
+        notificationService.notifyNewVoiceMail(response);
+
+        return response;
     }
 
     @Override
@@ -60,6 +65,9 @@ public class VoiceMailServiceImpl implements VoiceMailService {
         entity.setOuvido(true);
 
         repository.save(entity);
+
+        // Notifica todos os clientes sobre a atualização
+        notificationService.notifyVoiceMailStatusUpdated(id, true);
     }
 
     @Override
@@ -69,6 +77,9 @@ public class VoiceMailServiceImpl implements VoiceMailService {
         }
 
         repository.deleteById(id);
+
+        // Notifica todos os clientes sobre a exclusão
+        notificationService.notifyVoiceMailDeleted(id);
     }
 
     @Override

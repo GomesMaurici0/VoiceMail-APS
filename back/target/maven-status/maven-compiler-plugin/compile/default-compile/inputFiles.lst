@@ -1,0 +1,14 @@
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\controller\VoiceMailController.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\mapper\VoiceMailMapper.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\service\VoiceMailService.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\controller\WebSocketInfoController.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\persistence\entity\VoiceMail.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\dtos\Output\VoiceMailResponse.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\dtos\Input\VoiceMailRequest.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\persistence\repository\VoiceMailRepository.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\websocket\VoiceMailWebSocketHandler.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\service\impl\VoiceMailServiceImpl.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\config\CorsConfig.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\service\WebSocketNotificationService.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\BackApplication.java
+C:\Users\mauri\IdeaProjects\teste\VoiceMail-APS\back\src\main\java\com\example\back\config\WebSocketConfig.java
