@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-05-09T19:33:01-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.11 (Microsoft)"
+    date = "2026-05-17T12:27:18-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.10 (Microsoft)"
 )
 @Component
 public class VoiceMailMapperImpl implements VoiceMailMapper {
@@ -24,6 +24,7 @@ public class VoiceMailMapperImpl implements VoiceMailMapper {
         VoiceMail voiceMail = new VoiceMail();
 
         voiceMail.setAudioUrl( dto.audioUrl() );
+        voiceMail.setTranscricao( dto.transcricao() );
 
         return voiceMail;
     }
@@ -34,19 +35,19 @@ public class VoiceMailMapperImpl implements VoiceMailMapper {
             return null;
         }
 
+        String transcricao = null;
         Long id = null;
         String audioUrl = null;
         Boolean ouvido = null;
         LocalDateTime dataCriacao = null;
 
+        transcricao = entity.getTranscricao();
         id = entity.getId();
         audioUrl = entity.getAudioUrl();
         ouvido = entity.getOuvido();
         dataCriacao = entity.getDataCriacao();
 
-        String textoFalado = null;
-
-        VoiceMailResponse voiceMailResponse = new VoiceMailResponse( textoFalado, id, audioUrl, ouvido, dataCriacao );
+        VoiceMailResponse voiceMailResponse = new VoiceMailResponse( transcricao, id, audioUrl, ouvido, dataCriacao );
 
         return voiceMailResponse;
     }
